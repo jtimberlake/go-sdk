@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 )
 
 var (
@@ -105,10 +104,10 @@ func (e *Ex) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if e.Class != nil && len(e.Class.Error()) > 0 {
-			io.WriteString(s, e.Class.Error())
+			fmt.Fprint(s, e.Class.Error())
 		}
 		if len(e.Message) > 0 {
-			io.WriteString(s, "; "+e.Message)
+			fmt.Fprint(s, "; "+e.Message)
 		}
 		if s.Flag('+') && e.StackTrace != nil {
 			e.StackTrace.Format(s, verb)
@@ -123,7 +122,7 @@ func (e *Ex) Format(s fmt.State, verb rune) {
 		}
 		return
 	case 'c':
-		io.WriteString(s, e.Class.Error())
+		fmt.Fprint(s, e.Class.Error())
 	case 'i':
 		if e.Inner != nil {
 			if typed, ok := e.Inner.(fmt.Formatter); ok {
@@ -133,7 +132,7 @@ func (e *Ex) Format(s fmt.State, verb rune) {
 			}
 		}
 	case 'm':
-		io.WriteString(s, e.Message)
+		fmt.Fprint(s, e.Message)
 	case 'q':
 		fmt.Fprintf(s, "%q", e.Message)
 	}
@@ -227,10 +226,10 @@ func (e *Ex) String() string {
 		fmt.Fprintf(s, "%s", e.Class)
 	}
 	if len(e.Message) > 0 {
-		io.WriteString(s, " "+e.Message)
+		fmt.Fprint(s, " "+e.Message)
 	}
 	if e.StackTrace != nil {
-		io.WriteString(s, " "+e.StackTrace.String())
+		fmt.Fprint(s, " "+e.StackTrace.String())
 	}
 	return s.String()
 }

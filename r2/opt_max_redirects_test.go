@@ -16,14 +16,12 @@ func TestOptMaxRedirects(t *testing.T) {
 	ping := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		pingCount++
 		http.Redirect(rw, r, pongURL, http.StatusTemporaryRedirect)
-		return
 	}))
 	defer ping.Close()
 
 	pong := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		pongCount++
 		http.Redirect(rw, r, pingURL, http.StatusTemporaryRedirect)
-		return
 	}))
 	defer pong.Close()
 

@@ -192,7 +192,7 @@ func TestRequestXML(t *testing.T) {
 	assert := assert.New(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		xml.NewEncoder(w).Encode(xmlTestCase{
+		_ = xml.NewEncoder(w).Encode(xmlTestCase{
 			Status: "ok!",
 		})
 	}))

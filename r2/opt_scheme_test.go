@@ -13,6 +13,6 @@ func TestOptScheme(t *testing.T) {
 	assert.Equal("spdy", r.Request.URL.Scheme)
 
 	var unset Request
-	OptScheme("spdy")(&unset)
+	assert.Nil(OptScheme("spdy")(&unset))
 	assert.Equal("spdy", unset.Request.URL.Scheme)
 }

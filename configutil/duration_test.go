@@ -1,6 +1,7 @@
 package configutil
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -12,7 +13,7 @@ func TestDuration(t *testing.T) {
 
 	d := Duration(time.Second)
 
-	ret, err := d.Duration()
+	ret, err := d.Duration(context.TODO())
 	assert.Nil(err)
 	assert.NotNil(ret)
 	assert.Equal(time.Second, *ret)

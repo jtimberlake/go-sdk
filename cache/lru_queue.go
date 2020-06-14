@@ -256,6 +256,5 @@ func arrayCopy(source []*Value, sourceIndex int, destination []*Value, destinati
 
 const (
 	ringBufferMinimumGrow     = 4
-	ringBufferShrinkThreshold = 32
 	ringBufferDefaultCapacity = 4
 )

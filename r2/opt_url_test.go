@@ -14,6 +14,6 @@ func TestOptURL(t *testing.T) {
 	assert.Equal("https://foo.bar.com/buzz?a=b", r.URL.String())
 
 	var unset Request
-	OptURL("https://foo.bar.com/buzz?a=b")(&unset)
+	assert.Nil(OptURL("https://foo.bar.com/buzz?a=b")(&unset))
 	assert.Equal("https://foo.bar.com/buzz?a=b", unset.URL.String())
 }

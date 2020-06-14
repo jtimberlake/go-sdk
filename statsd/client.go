@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/blend/go-sdk/ex"
+	"github.com/blend/go-sdk/stats"
 )
 
 // Error classes.
@@ -84,7 +85,7 @@ func OptConfig(cfg Config) ClientOpt {
 		c.MaxPacketSize = cfg.MaxPacketSize
 		c.MaxBufferSize = cfg.MaxBufferSize
 		for key, value := range cfg.DefaultTags {
-			c.AddDefaultTag(key, value)
+			c.AddDefaultTags(stats.Tag(key, value))
 		}
 		return OptSampleRate(cfg.SampleRate)(c)
 	}
@@ -130,9 +131,9 @@ type Client struct {
 	bufferCount int
 }
 
-// AddDefaultTag adds a default tag.
-func (c *Client) AddDefaultTag(key, value string) {
-	c.defaultTags = append(c.defaultTags, Tag(key, value))
+// AddDefaultTags adds default tags.
+func (c *Client) AddDefaultTags(tags ...string) {
+	c.defaultTags = append(c.defaultTags, tags...)
 }
 
 // DefaultTags returns the default tags.

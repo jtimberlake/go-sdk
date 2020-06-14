@@ -1,10 +1,8 @@
 package r2
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/blend/go-sdk/ex"
 )
@@ -34,12 +32,4 @@ func ErrIsTooManyRedirects(err error) bool {
 		return ex.Is(typed.Err, http.ErrUseLastResponse)
 	}
 	return false
-}
-
-func urlStrings(via []*http.Request) []string {
-	var output []string
-	for _, req := range via {
-		output = append(output, fmt.Sprintf("%s %v", strings.ToUpper(req.Method), req.URL.String()))
-	}
-	return output
 }

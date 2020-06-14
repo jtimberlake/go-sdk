@@ -15,8 +15,9 @@ var (
 	_ Locker = (*LocalCache)(nil)
 )
 
-// NewLocalCache returns a new LocalLocalCache.
-func NewLocalCache(options ...LocalCacheOption) *LocalCache {
+// New returns a new LocalLocalCache.
+// It defaults to 500ms sweep intervals and an LRU queue for invalidation.
+func New(options ...LocalCacheOption) *LocalCache {
 	c := LocalCache{
 		Data: make(map[interface{}]*Value),
 		LRU:  NewLRUQueue(),
@@ -31,10 +32,17 @@ func NewLocalCache(options ...LocalCacheOption) *LocalCache {
 // LocalCacheOption is a local cache option.
 type LocalCacheOption func(*LocalCache)
 
-// OptLocalCacheSweepInterval sets the local cache sweep interval.
-func OptLocalCacheSweepInterval(d time.Duration) LocalCacheOption {
+// OptSweepInterval sets the local cache sweep interval.
+func OptSweepInterval(d time.Duration) LocalCacheOption {
 	return func(lc *LocalCache) {
 		lc.Sweeper = async.NewInterval(lc.Sweep, d)
+	}
+}
+
+// OptLRU sets the LRU implementation.
+func OptLRU(lruImplementation LRU) LocalCacheOption {
+	return func(lc *LocalCache) {
+		lc.LRU = lruImplementation
 	}
 }
 

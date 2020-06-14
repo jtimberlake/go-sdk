@@ -11,21 +11,21 @@ func TestOptMethods(t *testing.T) {
 
 	req := New("https://foo.bar.local")
 
-	OptMethod("OPTIONS")(req)
+	assert.Nil(OptMethod("OPTIONS")(req))
 	assert.Equal("OPTIONS", req.Method)
 
-	OptGet()(req)
+	assert.Nil(OptGet()(req))
 	assert.Equal("GET", req.Method)
 
-	OptPost()(req)
+	assert.Nil(OptPost()(req))
 	assert.Equal("POST", req.Method)
 
-	OptPut()(req)
+	assert.Nil(OptPut()(req))
 	assert.Equal("PUT", req.Method)
 
-	OptPatch()(req)
+	assert.Nil(OptPatch()(req))
 	assert.Equal("PATCH", req.Method)
 
-	OptDelete()(req)
+	assert.Nil(OptDelete()(req))
 	assert.Equal("DELETE", req.Method)
 }
