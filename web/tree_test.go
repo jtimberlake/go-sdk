@@ -5,13 +5,13 @@
 package web
 
 import (
-	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
 	"testing"
 )
 
+/*
 //nolint:unused
 func printChildren(n *RouteNode, prefix string) {
 	fmt.Printf(" %02d:%02d %s%s[%d] %v %t %d \r\n", n.Priority, n.MaxParams, prefix, n.Path, len(n.Children), n.Route, n.IsWildcard, n.RouteNodeType)
@@ -22,6 +22,7 @@ func printChildren(n *RouteNode, prefix string) {
 		printChildren(child, prefix)
 	}
 }
+*/
 
 // Used as a workaround since we can't compare functions or their addresses
 var fakeHandlerValue string

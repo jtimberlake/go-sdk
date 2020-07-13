@@ -91,6 +91,13 @@ func (c Config) GetTraceAddress() string {
 	return ""
 }
 
+// GetTraceHost returns the datadog collector address string.
+//
+// DEPRECATED(1.2021*): this method is deprecated and will be removed.
+func (c Config) GetTraceHost() string {
+	return c.GetTraceAddress()
+}
+
 // PortOrDefault returns the port or a default.
 func (c Config) PortOrDefault() string {
 	if c.Port != "" {

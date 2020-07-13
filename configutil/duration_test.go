@@ -11,10 +11,14 @@ import (
 func TestDuration(t *testing.T) {
 	assert := assert.New(t)
 
-	d := Duration(time.Second)
-
-	ret, err := d.Duration(context.TODO())
+	d := Duration(0)
+	ptr, err := d.Duration(context.TODO())
+	assert.Nil(ptr)
 	assert.Nil(err)
-	assert.NotNil(ret)
-	assert.Equal(time.Second, *ret)
+
+	d = Duration(time.Second)
+	ptr, err = d.Duration(context.TODO())
+	assert.Nil(err)
+	assert.NotNil(ptr)
+	assert.Equal(time.Second, *ptr)
 }

@@ -20,6 +20,10 @@ const (
 	ErrSampleRateInvalid ex.Class = "statsd invalid sample rate"
 )
 
+var (
+	_ stats.Collector = (*Client)(nil)
+)
+
 // New creates a new statsd client and opens
 // the underlying UDP connection.
 func New(opts ...ClientOpt) (*Client, error) {
@@ -129,6 +133,11 @@ type Client struct {
 	bufferMu    sync.Mutex
 	buffer      []byte
 	bufferCount int
+}
+
+// AddDefaultTag adds a new default tag.
+func (c *Client) AddDefaultTag(name, value string) {
+	c.defaultTags = append(c.defaultTags, stats.Tag(name, value))
 }
 
 // AddDefaultTags adds default tags.

@@ -14,5 +14,5 @@ func TestOptContext(t *testing.T) {
 
 	req := New("https://foo.bar.local")
 	assert.Nil(opt(req))
-	assert.NotNil(req.Context())
+	assert.NotNil(req.Request.Context())
 }

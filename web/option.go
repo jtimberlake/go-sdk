@@ -119,7 +119,9 @@ func OptDefaultHeader(key, value string) Option {
 	}
 }
 
-// OptDefaultHeaders sets default headers.
+// OptDefaultHeaders sets base headers.
+//
+// DEPRECATION(1.2021*): this method will be removed.
 func OptDefaultHeaders(headers http.Header) Option {
 	return func(a *App) error {
 		a.BaseHeaders = headers
@@ -127,8 +129,26 @@ func OptDefaultHeaders(headers http.Header) Option {
 	}
 }
 
-// OptDefaultMiddleware sets default middleware.
+// OptBaseHeaders sets base headers.
+func OptBaseHeaders(headers http.Header) Option {
+	return func(a *App) error {
+		a.BaseHeaders = headers
+		return nil
+	}
+}
+
+// OptDefaultMiddleware sets base middleware.
+//
+// DEPRECATION(1.2021*): this method will be removed.
 func OptDefaultMiddleware(middleware ...Middleware) Option {
+	return func(a *App) error {
+		a.BaseMiddleware = middleware
+		return nil
+	}
+}
+
+// OptBaseMiddleware sets default middleware.
+func OptBaseMiddleware(middleware ...Middleware) Option {
 	return func(a *App) error {
 		a.BaseMiddleware = middleware
 		return nil
@@ -139,6 +159,14 @@ func OptDefaultMiddleware(middleware ...Middleware) Option {
 func OptUse(m Middleware) Option {
 	return func(a *App) error {
 		a.BaseMiddleware = append(a.BaseMiddleware, m)
+		return nil
+	}
+}
+
+// OptBaseStateValue sets a base state value.
+func OptBaseStateValue(key string, value interface{}) Option {
+	return func(a *App) error {
+		a.BaseState.Set(key, value)
 		return nil
 	}
 }

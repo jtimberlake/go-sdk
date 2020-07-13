@@ -37,19 +37,21 @@ func MustNew(options ...Option) *Logger {
 
 // All returns a new logger with all flags enabled.
 func All(options ...Option) *Logger {
-	return MustNew(append([]Option{
-		OptConfigFromEnv(),
-		OptAll(),
-	}, options...)...)
+	return MustNew(
+		append([]Option{
+			OptConfigFromEnv(),
+			OptAll(),
+		}, options...)...)
 }
 
 // None returns a new logger with all flags enabled.
-func None() *Logger {
+func None(options ...Option) *Logger {
 	return MustNew(
-		OptNone(),
-		OptOutput(nil),
-		OptFormatter(nil),
-	)
+		append([]Option{
+			OptNone(),
+			OptOutput(nil),
+			OptFormatter(nil),
+		}, options...)...)
 }
 
 // Prod returns a new logger tuned for production use.
@@ -60,6 +62,21 @@ func Prod(options ...Option) *Logger {
 			OptAll(),
 			OptOutput(os.Stderr),
 			OptFormatter(NewTextOutputFormatter(OptTextNoColor())),
+		}, options...)...)
+}
+
+// Memory creates a logger that logs to the in-memory writer passed in.
+//
+// It is useful for writing tests that collect log output.
+func Memory(buffer io.Writer, options ...Option) *Logger {
+	return MustNew(
+		append([]Option{
+			OptAll(),
+			OptOutput(buffer),
+			OptFormatter(NewTextOutputFormatter(
+				OptTextNoColor(),
+				OptTextHideTimestamp(),
+			)),
 		}, options...)...)
 }
 

@@ -21,9 +21,9 @@ func TestStart(t *testing.T) {
 	reqTracer := Tracer(mockTracer)
 
 	req := r2.New("https://foo.com/bar", r2.OptHeader(make(http.Header)))
-	rtf := reqTracer.Start(&req.Request)
+	rtf := reqTracer.Start(req.Request)
 
-	spanContext, err := mockTracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(req.Header))
+	spanContext, err := mockTracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(req.Request.Header))
 	assert.Nil(err)
 	mockSpanContext := spanContext.(mocktracer.MockSpanContext)
 
@@ -43,9 +43,9 @@ func TestStartNoHeader(t *testing.T) {
 	reqTracer := Tracer(mockTracer)
 
 	req := r2.New("https://foo.com/bar")
-	rtf := reqTracer.Start(&req.Request)
+	rtf := reqTracer.Start(req.Request)
 
-	spanContext, err := mockTracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(req.Header))
+	spanContext, err := mockTracer.Extract(opentracing.HTTPHeaders, opentracing.HTTPHeadersCarrier(req.Request.Header))
 	assert.Nil(err)
 	mockSpanContext := spanContext.(mocktracer.MockSpanContext)
 
@@ -68,7 +68,7 @@ func TestStartWithParentSpan(t *testing.T) {
 	ctx := opentracing.ContextWithSpan(context.Background(), parentSpan)
 
 	req := r2.New("https://foo.com/bar", r2.OptContext(ctx))
-	rtf := reqTracer.Start(&req.Request)
+	rtf := reqTracer.Start(req.Request)
 
 	span := rtf.(r2TraceFinisher).span
 	mockSpan := span.(*mocktracer.MockSpan)
@@ -84,8 +84,8 @@ func TestFinish(t *testing.T) {
 	reqTracer := Tracer(mockTracer)
 
 	req := r2.New("https://foo.com/bar")
-	rtf := reqTracer.Start(&req.Request)
-	rtf.Finish(&req.Request, &http.Response{StatusCode: 200}, time.Now(), nil)
+	rtf := reqTracer.Start(req.Request)
+	rtf.Finish(req.Request, &http.Response{StatusCode: 200}, time.Now(), nil)
 
 	span := rtf.(r2TraceFinisher).span
 	mockSpan := span.(*mocktracer.MockSpan)
@@ -99,8 +99,8 @@ func TestFinishError(t *testing.T) {
 	reqTracer := Tracer(mockTracer)
 
 	req := r2.New("https://foo.com/bar")
-	rtf := reqTracer.Start(&req.Request)
-	rtf.Finish(&req.Request, &http.Response{StatusCode: 500}, time.Now(), fmt.Errorf("error"))
+	rtf := reqTracer.Start(req.Request)
+	rtf.Finish(req.Request, &http.Response{StatusCode: 500}, time.Now(), fmt.Errorf("error"))
 
 	span := rtf.(r2TraceFinisher).span
 	mockSpan := span.(*mocktracer.MockSpan)

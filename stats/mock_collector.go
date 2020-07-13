@@ -55,6 +55,11 @@ func (mc *MockCollector) makeName(name string) string {
 	return name
 }
 
+// AddDefaultTag adds a default tag.
+func (mc *MockCollector) AddDefaultTag(name, value string) {
+	mc.Field.DefaultTags = append(mc.Field.DefaultTags, Tag(name, value))
+}
+
 // AddDefaultTags adds default tags.
 func (mc *MockCollector) AddDefaultTags(tags ...string) {
 	mc.Field.DefaultTags = append(mc.Field.DefaultTags, tags...)

@@ -285,6 +285,56 @@ func TestLocalCacheStats(t *testing.T) {
 	assert.NotZero(stats.MaxAge)
 }
 
+func TestLocalCacheResetDefault(t *testing.T) {
+	assert := assert.New(t)
+
+	var keyWasSet, didCallRemoveHandler, removalReasonWasRemoved bool
+	lc := New()
+	lc.Set("foo", "foo-value")
+	lc.Set("bar", "bar-value")
+	lc.Set("remove-handler", "remove-handler-value", OptValueOnRemove(func(key interface{}, reason RemovalReason) {
+		didCallRemoveHandler = true
+		keyWasSet = key.(string) == "remove-handler"
+		removalReasonWasRemoved = reason == Removed
+	}))
+
+	assert.Equal(3, len(lc.Data))
+	lc.Reset()
+	assert.Zero(lc.LRU.Len())
+	assert.True(didCallRemoveHandler, "should have called remove handler for `remove-handler`")
+	assert.True(keyWasSet, "key should have been `remove-handler`")
+	assert.True(removalReasonWasRemoved, "removal reason should have been `Removed`")
+
+	lc.Set("foo", "foo-value")
+	lc.Set("bar", "bar-value")
+	assert.Equal(2, len(lc.Data))
+}
+
+func TestLocalCacheResetHeap(t *testing.T) {
+	assert := assert.New(t)
+
+	var keyWasSet, didCallRemoveHandler, removalReasonWasRemoved bool
+	lc := New(OptLRU(NewLRUHeap()))
+	lc.Set("foo", "foo-value")
+	lc.Set("bar", "bar-value")
+	lc.Set("remove-handler", "remove-handler-value", OptValueOnRemove(func(key interface{}, reason RemovalReason) {
+		didCallRemoveHandler = true
+		keyWasSet = key.(string) == "remove-handler"
+		removalReasonWasRemoved = reason == Removed
+	}))
+
+	assert.Equal(3, len(lc.Data))
+	lc.Reset()
+	assert.Zero(lc.LRU.Len())
+	assert.True(didCallRemoveHandler, "should have called remove handler for `remove-handler`")
+	assert.True(keyWasSet, "key should have been `remove-handler`")
+	assert.True(removalReasonWasRemoved, "removal reason should have been `Removed`")
+
+	lc.Set("foo", "foo-value")
+	lc.Set("bar", "bar-value")
+	assert.Equal(2, len(lc.Data))
+}
+
 func BenchmarkLocalCache(b *testing.B) {
 	for x := 0; x < b.N; x++ {
 		benchLocalCache(1024)

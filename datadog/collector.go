@@ -57,6 +57,11 @@ type Collector struct {
 	defaultTags []string
 }
 
+// AddDefaultTag adds a new default tag.
+func (dc *Collector) AddDefaultTag(name, value string) {
+	dc.defaultTags = append(dc.defaultTags, stats.Tag(name, value))
+}
+
 // AddDefaultTags adds new default tags.
 func (dc *Collector) AddDefaultTags(tags ...string) {
 	dc.defaultTags = append(dc.defaultTags, tags...)
@@ -82,7 +87,7 @@ func (dc *Collector) Gauge(name string, value float64, tags ...string) error {
 	return dc.client.Gauge(name, value, dc.tagsWithDefaults(tags...), 1.0)
 }
 
-// Histogram sets a guage value.
+// Histogram sets a gauge value.
 func (dc *Collector) Histogram(name string, value float64, tags ...string) error {
 	return dc.client.Histogram(name, value, dc.tagsWithDefaults(tags...), 1.0)
 }

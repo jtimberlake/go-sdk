@@ -33,10 +33,10 @@ func New(options ...Option) (*App, error) {
 	a := App{
 		Latch:           async.NewLatch(),
 		BaseContext:     func(_ net.Listener) context.Context { return context.Background() },
-		Server:          new(http.Server),
-		BaseState:       new(SyncState),
-		Statics:         map[string]*StaticFileServer{},
 		BaseHeaders:     BaseHeaders(),
+		BaseState:       new(SyncState),
+		Server:          new(http.Server),
+		Statics:         map[string]*StaticFileServer{},
 		Views:           views,
 		DefaultProvider: views,
 	}
@@ -55,8 +55,9 @@ type App struct {
 
 	Config Config
 
-	Auth           AuthManager
-	BaseContext    func(net.Listener) context.Context
+	Auth        AuthManager
+	BaseContext func(net.Listener) context.Context
+
 	BaseHeaders    http.Header
 	BaseMiddleware []Middleware
 	BaseState      State

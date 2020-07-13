@@ -302,6 +302,16 @@ func (am AuthManager) Logout(ctx *Ctx) error {
 	return nil
 }
 
+// VerifySession reads a session value from a request and checks if it's valid.
+// It also handles updating a rolling expiry.
+//
+// It is a pass-through to `VerifyOrExpireSession`
+//
+// DEPRECATED(1.2021*): this method is deprecated and will be removed.
+func (am AuthManager) VerifySession(ctx *Ctx) (*Session, error) {
+	return am.VerifyOrExpireSession(ctx)
+}
+
 // VerifyOrExpireSession reads a session value from a request and checks if it's valid.
 // It also handles updating a rolling expiry.
 func (am AuthManager) VerifyOrExpireSession(ctx *Ctx) (session *Session, err error) {

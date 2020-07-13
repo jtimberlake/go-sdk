@@ -14,11 +14,13 @@ func IsLoggerSet(log interface{}) bool {
 }
 
 // MaybeTrigger triggers an event if the logger is set.
-func MaybeTrigger(log Triggerable, e Event) {
+//
+// DEPRECATION(1.2021*): this method will be changed to drop the context and use `context.Background()`.
+func MaybeTrigger(ctx context.Context, log Triggerable, e Event) {
 	if !IsLoggerSet(log) {
 		return
 	}
-	log.TriggerContext(context.Background(), e)
+	log.TriggerContext(ctx, e)
 }
 
 // MaybeTriggerContext triggers an event if the logger is set in a given context.

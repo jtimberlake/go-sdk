@@ -12,6 +12,13 @@ var (
 // MultiCollector is a class that wraps a set of statsd collectors
 type MultiCollector []Collector
 
+// AddDefaultTag implements Taggable.
+func (collectors MultiCollector) AddDefaultTag(name, value string) {
+	for _, collector := range collectors {
+		collector.AddDefaultTag(name, value)
+	}
+}
+
 // AddDefaultTags implements Taggable.
 func (collectors MultiCollector) AddDefaultTags(tags ...string) {
 	for _, collector := range collectors {
@@ -67,7 +74,7 @@ func (collectors MultiCollector) Gauge(name string, value float64, tags ...strin
 	return
 }
 
-// Histogram sets a guage value and writes to the different hosts
+// Histogram sets a histogram value and writes to the different hosts
 func (collectors MultiCollector) Histogram(name string, value float64, tags ...string) (err error) {
 	for _, collector := range collectors {
 		err = collector.Histogram(name, value, tags...)

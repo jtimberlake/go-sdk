@@ -5,6 +5,18 @@ import (
 	"regexp"
 )
 
+const (
+	// TestURL can be used in tests for the URL passed to requests.
+	//
+	// The URL itself sets `https` as the scheme, `test.invalid` as the host,
+	// `/test` as the path, and `query=value` as the querystring.
+	//
+	// Note: .invalid is a special top level domain that will _never_ be assigned
+	// to a real registrant, it is always reserved for testing.
+	// See: https://www.iana.org/domains/reserved
+	TestURL = "https://test.invalid/test?query=value"
+)
+
 // Logger flags
 const (
 	FlagHTTPRequest = "http.request"

@@ -251,13 +251,40 @@ func (lc *LocalCache) Remove(key interface{}) (value interface{}, hit bool) {
 
 	value = valueData.Value
 	hit = true
+
 	if valueData.OnRemove != nil {
 		valueData.OnRemove(key, Removed)
 	}
 	return
 }
 
+// Reset removes all items from the cache, leaving an empty cache.
+//
+// Reset will call the removed handler for any elements currently in the cache
+// with a removal reason `Removed`. This will be done outside the critical section.
+func (lc *LocalCache) Reset() {
+	lc.Lock()
+	var removed []*Value
+	for _, value := range lc.Data {
+		if value.OnRemove != nil {
+			removed = append(removed, value)
+		}
+	}
+	lc.LRU.Reset()                         // reset the lru queue
+	lc.Data = make(map[interface{}]*Value) // reset the map
+	lc.Unlock()
+
+	// call the remove handlers
+	for _, value := range removed {
+		value.OnRemove(value.Key, Removed)
+	}
+}
+
 // Stats returns the LocalCache stats.
+//
+// Stats include the number of items held, the age of the items,
+// and the size in bytes represented by each of the items (not including)
+// the fields of the cache itself like the LRU queue.
 func (lc *LocalCache) Stats() (stats Stats) {
 	lc.RLock()
 	defer lc.RUnlock()
