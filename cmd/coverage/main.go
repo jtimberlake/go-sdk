@@ -131,7 +131,7 @@ func walkPath(walkedPath string, fullCoverageData *os.File) []error {
 
 	maybeFatal(filepath.Walk(rootPath, func(currentPath string, info os.FileInfo, fileErr error) error {
 		packageCoverReport, err := getPackageCoverage(currentPath, info, fileErr)
-		if err != nil {
+		if err != nil && len(packageCoverReport) > 0 {
 			coverageErrors = append(coverageErrors, err)
 		}
 
