@@ -115,6 +115,7 @@ func main() {
 	}
 
 	if len(allPathCoverageErrors) > 0 {
+		fmt.Fprintln(os.Stderr, "coverage thresholds not met")
 		for _, coverageError := range allPathCoverageErrors {
 			fmt.Fprintf(os.Stderr, "%+v\n", coverageError)
 		}
