@@ -87,7 +87,7 @@ func main() {
 		paths = []string{"./..."}
 	}
 
-	allPathCoverageErrors := []error{}
+	var allPathCoverageErrors []error
 	for _, path := range paths {
 		fmt.Fprintf(os.Stdout, "walking path: %s\n", path)
 		if coverageErrors := walkPath(path, fullCoverageData); len(coverageErrors) > 0 {
@@ -128,7 +128,7 @@ func main() {
 func walkPath(walkedPath string, fullCoverageData *os.File) []error {
 	recursive := strings.HasSuffix(walkedPath, expand)
 	rootPath := filepath.Dir(walkedPath)
-	coverageErrors := []error{}
+	var coverageErrors []error
 
 	maybeFatal(filepath.Walk(rootPath, func(currentPath string, info os.FileInfo, fileErr error) error {
 		packageCoverReport, err := getPackageCoverage(currentPath, info, fileErr)
